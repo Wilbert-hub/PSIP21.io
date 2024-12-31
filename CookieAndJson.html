@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Shop with Cookies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .section {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            width: calc(50% - 20px);
+            box-sizing: border-box;
+        }
+
+        .section h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .data-display div {
+            margin-bottom: 5px;
+        }
+    </style>
+    <script>
+        // Task 1: JSON and Shopping Cart
+        const catalog = [
+            { id: 1, name: "Laptop", price: 1200 },
+            { id: 2, name: "Smartphone", price: 800 },
+            { id: 3, name: "Tablet", price: 600 },
+            { id: 4, name: "Headphones", price: 150 },
+            { id: 5, name: "Smartwatch", price: 250 },
+            { id: 6, name: "Monitor", price: 300 },
+            { id: 7, name: "Keyboard", price: 50 },
+            { id: 8, name: "Mouse", price: 30 },
+            { id: 9, name: "Printer", price: 200 },
+            { id: 10, name: "Router", price: 100 }
+        ];
+
+        const cart = [];
+
+        function displayCatalog() {
+            const catalogDiv = document.getElementById("catalog");
+            catalogDiv.innerHTML = "";
+            catalog.forEach(item => {
+                catalogDiv.innerHTML += `<div>
+                    <strong>${item.name}</strong> - $${item.price}
+                    <button onclick="addToCart(${item.id})">Add to Cart</button>
+                </div>`;
+            });
+        }
+
+        function addToCart(id) {
+            const product = catalog.find(item => item.id === id);
+            if (product) {
+                cart.push(product);
+                displayCart();
+            }
+        }
+
+        function displayCart() {
+            const cartDiv = document.getElementById("cart");
+            cartDiv.innerHTML = "";
+            cart.forEach((item, index) => {
+                cartDiv.innerHTML += `<div>
+                    <strong>${item.name}</strong> - $${item.price}
+                    <button onclick="removeFromCart(${index})">Remove</button>
+                </div>`;
+            });
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            displayCart();
+        }
+
+        // Task 2: Working with Cookies
+        function setCookie(name, value, days = 365) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};path=/;expires=${date.toUTCString()}`;
+        }
+
+        function getCookie(name) {
+            const matches = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+        function deleteCookie(name) {
+            document.cookie = `${name}=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        }
+
+        function saveUserDataToCookie() {
+            if (!navigator.cookieEnabled) {
+                alert("Cookies are disabled in your browser!");
+                return;
+            }
+
+            const formData = new FormData(document.getElementById("userForm"));
+            formData.forEach((value, key) => {
+                setCookie(key, value);
+            });
+            alert("Data saved to cookies!");
+        }
+
+        function saveUserDataToJSON() {
+            const formData = new FormData(document.getElementById("userForm"));
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+            const jsonDiv = document.getElementById("jsonData");
+            jsonDiv.innerHTML = `<pre>${JSON.stringify(jsonData, null, 2)}</pre>`;
+        }
+
+        function loadUserData() {
+            if (!navigator.cookieEnabled) {
+                alert("Cookies are disabled in your browser!");
+                return;
+            }
+
+            const resultDiv = document.getElementById("cookieData");
+            resultDiv.innerHTML = "";
+            const formData = new FormData(document.getElementById("userForm"));
+
+            formData.forEach((_, key) => {
+                const value = getCookie(key);
+                if (value) {
+                    resultDiv.innerHTML += `<div>${key}: ${value}</div>`;
+                }
+            });
+        }
+
+        function clearCookies() {
+            const formData = new FormData(document.getElementById("userForm"));
+            formData.forEach((_, key) => {
+                deleteCookie(key);
+            });
+            alert("Cookies cleared!");
+        }
+    </script>
+</head>
+<body>
+    <h1>Internet Shop</h1>
+
+    <div class="container">
+        <div class="section">
+            <h2>Catalog</h2>
+            <div id="catalog"></div>
+        </div>
+
+        <div class="section">
+            <h2>Shopping Cart</h2>
+            <div id="cart"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>User Data Form</h2>
+            <form id="userForm">
+                <div class="form-group">
+                    <label>Full Name: <input type="text" name="fullName" required></label>
+                </div>
+                <div class="form-group">
+                    <label>Email: <input type="email" name="email" required></label>
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth: <input type="date" name="dob" required></label>
+                </div>
+                <div class="form-group">
+                    <label>Place of Birth: <input type="text" name="birthPlace" required></label>
+                </div>
+                <div class="form-group">
+                    <label>Hobbies: <input type="text" name="hobbies"></label>
+                </div>
+                <button type="button" onclick="saveUserDataToCookie()">Save to Cookies</button>
+                <button type="button" onclick="saveUserDataToJSON()">Save to JSON</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>Saved Data</h2>
+            <h3>From Cookies</h3>
+            <div id="cookieData" class="data-display"></div>
+            <button onclick="loadUserData()">Load Cookies</button>
+            <button onclick="clearCookies()">Clear Cookies</button>
+
+            <h3>From JSON</h3>
+            <div id="jsonData" class="data-display"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize catalog display on page load
+        displayCatalog();
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<div id="output"></div>
+
+<button class="btn-primary" onclick="alert('Клик!')">Нажми меня</button>
+
+<button class="btn-secondary" onclick="countRabbits()">Count Rabbits</button>
+<script>
+    function countRabbits() {
+        for (let i = 1; i <= 3; i++) {
+            alert("Кролик номер " + i);
+        }
+    }
+</script>
+
+<button class="btn-success" id="elem">Нажми меня!</button>
+<script>
+    document.getElementById("elem").onclick = function() {
+        alert('Спасибо!');
+    };
+</script>
+
+<button class="btn-warning" onclick="alert(this.innerHTML)">Нажми меня</button>
+
+<button class="btn-danger" id="elem">Нажми меня</button>
+<script>
+    function handler1() {
+        alert('Спасибо!');
+    }
+    function handler2() {
+        alert('Спасибо ещё раз!');
+    }
+    document.getElementById("elem").onclick = () => alert("Привет");
+    document.getElementById("elem").addEventListener("click", handler1);
+    document.getElementById("elem").addEventListener("click", handler2);
+</script>
+
+<div class="form-container">
+    <form class="form" onclick="alert('Внешний')">
+        Внешний
+        <div class="form-item" onclick="alert('Средний')">
+            Средний
+            <p class="form-item-inner" onclick="alert('Внутренний')">Внутренний</p>
+        </div>
+    </form>
+</div>
+
+<button class="btn-info" onclick="window.location.href='StorageAndValidation.html'">18</button>
+
+<style>
+    .btn-primary, .btn-secondary, .btn-success, .btn-warning, .btn-danger, .btn-info {
+        display: block;
+        margin-bottom: 10px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .btn-primary { background-color: #007bff; color: #fff; }
+    .btn-secondary { background-color: #6c757d; color: #fff; }
+    .btn-success { background-color: #28a745; color: #fff; }
+    .btn-warning { background-color: #ffc107; color: #333; }
+    .btn-danger { background-color: #dc3545; color: #fff; }
+    .btn-info { background-color: #17a2b8; color: #fff; }
+    .form-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .form {
+        background-color: #f1f1f1;
+        padding: 20px;
+        border-radius: 5px;
+    }
+    .form-item {
+        background-color: #fff;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    .form-item-inner {
+        background-color: #f1f1f1;
+        padding: 5px;
+        border-radius: 5px;
+    }
+</style>

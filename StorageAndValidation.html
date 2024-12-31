@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Validation Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            flex: 0 0 200px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group .status {
+            flex: 0 0 150px;
+            padding-left: 10px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .form-group input:invalid ~ .status {
+            color: red;
+        }
+        .form-group input:invalid ~ .status::after {
+            content: " Неправильно";
+        }
+        .form-group input:valid ~ .status {
+            color: green;
+        }
+        .form-group input:valid ~ .status::after {
+            content: " Правильно";
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        // Wait until the DOM is fully loaded
+        document.addEventListener("DOMContentLoaded", () => {
+            // Select the form element
+            const form = document.querySelector("form");
+
+            // Add a submit event listener to the form
+            form.addEventListener("submit", (event) => {
+                // Prevent the default form submission behavior
+                event.preventDefault();
+
+                // Get the values of the input fields
+                const name = document.getElementById("name").value;
+                const email = document.getElementById("email").value;
+                const question = document.getElementById("question").value;
+
+                // Check if all fields are filled
+                if (!name || !email || !question) {
+                    alert("Все поля должны быть заполнены."); // Show an alert if any field is empty
+                    return; // Stop further execution
+                }
+
+                // Define a regular expression for email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert("Введите корректный email."); // Show an alert if the email is invalid
+                    return; // Stop further execution
+                }
+
+                // Create an object to store form data
+                const formData = {
+                    name,
+                    email,
+                    question
+                };
+
+                // Save the form data to Local Storage in JSON format
+                localStorage.setItem("formData", JSON.stringify(formData));
+
+                // Create and download a JSON file
+                const jsonBlob = new Blob([JSON.stringify(formData, null, 2)], { type: "application/json" });
+                const downloadLink = document.createElement("a");
+                downloadLink.href = URL.createObjectURL(jsonBlob);
+                downloadLink.download = "formData.json"; // File name for the downloaded JSON
+                downloadLink.click();
+
+                // Show the form data on the screen
+                const output = document.createElement("div"); // Create a div element for the output
+                output.style.marginTop = "20px";
+                output.style.padding = "10px";
+                output.style.border = "1px solid #ccc";
+                output.style.borderRadius = "5px";
+                output.style.backgroundColor = "#f9f9f9";
+                output.innerHTML = `<strong>Данные формы:</strong><br>Имя: ${name}<br>Email: ${email}<br>Вопрос: ${question}`;
+                document.body.appendChild(output); // Append the output div to the body
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <form>
+            <!-- Form group for name input -->
+            <div class="form-group">
+                <label for="name">Как вас зовут?</label>
+                <input type="text" id="name" name="name" required>
+                <div class="status"></div> <!-- Status indicator -->
+            </div>
+
+            <!-- Form group for email input -->
+            <div class="form-group">
+                <label for="email">Email адрес*</label>
+                <input type="email" id="email" name="email" required>
+                <div class="status"></div> <!-- Status indicator -->
+            </div>
+
+            <!-- Form group for question input -->
+            <div class="form-group">
+                <label for="question">Вопрос*</label>
+                <textarea id="question" name="question" rows="4" required></textarea>
+                <div class="status"></div> <!-- Status indicator -->
+            </div>
+
+            <!-- New button named 19-20 -->
+            <div class="form-group" style="justify-content: flex-end;">
+                <button type="button" onclick="location.href='CookieAndJson.html';">19-20</button>
+            </div>
+
+            <!-- Form group for submit button -->
+            <div class="form-group" style="justify-content: flex-end;">
+                <button type="submit">Отправить</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
